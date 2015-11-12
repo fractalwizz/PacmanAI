@@ -15,6 +15,7 @@
 from util import manhattanDistance
 from game import Directions
 import random, util, sys
+import math
 
 
 from game import Agent
@@ -354,7 +355,28 @@ def betterEvaluationFunction(currentGameState):
       DESCRIPTION: <write something here so we know what you did>
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    score = currentGameState.getScore()
+    food = currentGameState.getFood()
+    
+    pac = currentGameState.getPacmanPosition()
+    
+    dist = 9 - getClosestFood(pac, food)
+    if dist < 0:
+        dist = 1
+        
+    score += dist
+        
+    closestPellet = 9999
+    capsule = currentGameState.getCapsules()
+    
+    if capsule:
+        for pellet in capsule:
+            closestPellet = min(closestPellet, util.manhattanDistance(pac, pellet))
+        
+        score += 10 - closestPellet
+    
+    return score
+    
 
 # Abbreviation
 better = betterEvaluationFunction
